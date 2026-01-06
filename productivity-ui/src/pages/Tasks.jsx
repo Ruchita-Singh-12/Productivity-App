@@ -1,17 +1,32 @@
 import TaskCard from "../components/TaskCard";
-
-const tasks = [
-  { id: 1, title: "Study Spring Boot", priority: "HIGH", status: "PENDING" },
-  { id: 2, title: "Workout", priority: "MEDIUM", status: "COMPLETED" }
-];
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function Tasks() {
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log("Retrieved token:", token);
+    if (!token) return;
+    
+    axios.get("http://localhost:8080/api/tasks", {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    })
+    .then(res => {
+      setTasks(res.data);
+    })
+    .catch(err => {
+      console.log("API call failed, using default tasks");
+    });
+  }, []);
   return (
-    <div className="container">
-      <h2>Tasks</h2>
-      {tasks.map(task => (
-        <TaskCard key={task.id} task={task} />
-      ))}
-    </div>
+    <ul>
+    {tasks.map((task, i) => (
+      <li key={i}>{task}</li>
+    ))}
+  </ul>
   );
 }
