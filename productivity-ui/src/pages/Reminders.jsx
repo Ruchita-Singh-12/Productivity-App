@@ -1,17 +1,30 @@
-import ReminderCard from "../components/ReminderCard";
+import { useEffect, useState } from "react";
+import api from "../services/api";
 
-const reminders = [
-  { id: 1, title: "Meeting", time: "10:00 AM", status: "PENDING" },
-  { id: 2, title: "Medicine", time: "9:00 PM", status: "TRIGGERED" }
-];
+const Reminders = () => {
+  const [reminders, setReminders] = useState([]);
 
-export default function Reminders() {
+  useEffect(() => {
+    api.get("/reminders")
+      .then(res => setReminders(res.data))
+      .catch(err => {
+      alert("Unauthorized");
+    });
+  }, []);
+
   return (
-    <div className="container">
-      <h2>Reminders</h2>
-      {reminders.map(r => (
-        <ReminderCard key={r.id} reminder={r} />
-      ))}
+    <div>
+      
+
+      <ul>
+        {reminders.map(reminder => (
+          <li key={reminder.id}>
+            <strong>{reminder.title}</strong> — {reminder.time}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
+
+export default Reminders;

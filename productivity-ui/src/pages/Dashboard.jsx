@@ -1,12 +1,24 @@
-export default function Dashboard() {
+import { useEffect, useState } from "react";
+import api from "../services/api";
+
+function Dashboard() {
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    api.get("/tasks")
+      .then(res => setTasks(res.data))
+      .catch(() => alert("Unauthorized"));
+  }, []);
+
   return (
-    <div className="container">
-      <h2>Dashboard</h2>
-      <div className="grid">
-        <div className="card">📌 Tasks Due Today: 3</div>
-        <div className="card">⏰ Upcoming Reminders: 2</div>
-        <div className="card">🔥 Active Habits: 4</div>
-      </div>
+    <div>
+      <ul>
+        {tasks.map((task, i) => (
+          <li key={i}>{task}</li>
+        ))}
+      </ul>
     </div>
   );
 }
+
+export default Dashboard;

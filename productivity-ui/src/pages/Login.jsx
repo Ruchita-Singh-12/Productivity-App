@@ -1,16 +1,18 @@
 import { useState } from "react";
 import api from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const login = async () => {
     try {
       const res = await api.post("/auth/login", { email, password });
       localStorage.setItem("token", res.data.token);
-      alert("Login Successful "+JSON.stringify(res.data.token));
+      navigate("/dashboard");
     } catch(e) {
       alert(e);
       alert("Invalid Credentials");

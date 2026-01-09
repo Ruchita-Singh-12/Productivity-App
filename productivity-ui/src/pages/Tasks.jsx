@@ -19,7 +19,7 @@ export default function Tasks() {
       setTasks(res.data);
     })
     .catch(err => {
-      console.log("API call failed, using default tasks");
+      alert("Unauthorized");
     });
   }, []);
   return (

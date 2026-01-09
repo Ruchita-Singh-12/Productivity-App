@@ -1,17 +1,28 @@
-import HabitCard from "../components/HabitCard";
+import { useEffect, useState } from "react";
+import api from "../services/api";
 
-const habits = [
-  { id: 1, name: "Morning Exercise", streak: 5 },
-  { id: 2, name: "Reading", streak: 10 }
-];
+const Habit = () => {
+  const [habits, setHabits] = useState([]);
 
-export default function Habits() {
+  useEffect(() => {
+    api.get("/habits")
+      .then(res => setHabits(res.data))
+      .catch(err => {
+        alert("Unauthorized");
+      });
+  }, []);
+
   return (
-    <div className="container">
-      <h2>Habits</h2>
-      {habits.map(h => (
-        <HabitCard key={h.id} habit={h} />
-      ))}
+    <div>
+      <ul>
+        {habits.map(habit => (
+          <li key={habit.id}>
+            <strong>{habit.name}</strong> — {habit.status}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
+
+export default Habit;
